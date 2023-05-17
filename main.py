@@ -52,7 +52,7 @@ def bot_actions(call: types.CallbackQuery):
 
 @bot.callback_query_handler(lambda callback: callback.data.startswith("messages:"))
 def bot_actions(call: types.CallbackQuery):
-    if message.from_user.username not in allowed_users:
+    if call.from_user.username not in allowed_users:
         return
     data = call.data.split(":")[-1]
     con = connect()
@@ -72,7 +72,7 @@ def bot_actions(call: types.CallbackQuery):
 
 @bot.callback_query_handler(lambda callback: callback.data.startswith("users:"))
 def bot_actions(call: types.CallbackQuery):
-    if message.from_user.username not in allowed_users:
+    if call.from_user.username not in allowed_users:
         return
     data = call.data.split(":")[-1]
     con = connect()
