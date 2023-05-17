@@ -34,7 +34,7 @@ def start(message: types.Message):
 
 @bot.callback_query_handler(lambda callback: callback.data.startswith("bots:"))
 def bot_actions(call: types.CallbackQuery):
-    if message.from_user.username not in allowed_users:
+    if call.from_user.username not in allowed_users:
         return
     data = call.data.split(":")[-1]
     temp_bots[call.from_user.id] = data
