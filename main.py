@@ -5,6 +5,7 @@ from config import *
 
 bot = TeleBot(token=TOKEN)
 temp_bots = {}
+allowed_users = ['msnetwin', 'aircradmin']
 
 
 def connect():
@@ -26,11 +27,15 @@ def main_bar(message: types.Message):
 
 @bot.message_handler(commands=["start"])
 def start(message: types.Message):
+    if message.from_user.username not in allowed_users:
+        return
     main_bar(message)
 
 
 @bot.callback_query_handler(lambda callback: callback.data.startswith("bots:"))
 def bot_actions(call: types.CallbackQuery):
+    if message.from_user.username not in allowed_users:
+        return
     data = call.data.split(":")[-1]
     temp_bots[call.from_user.id] = data
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -47,6 +52,8 @@ def bot_actions(call: types.CallbackQuery):
 
 @bot.callback_query_handler(lambda callback: callback.data.startswith("messages:"))
 def bot_actions(call: types.CallbackQuery):
+    if message.from_user.username not in allowed_users:
+        return
     data = call.data.split(":")[-1]
     con = connect()
     with con.cursor() as cursor:
@@ -65,6 +72,8 @@ def bot_actions(call: types.CallbackQuery):
 
 @bot.callback_query_handler(lambda callback: callback.data.startswith("users:"))
 def bot_actions(call: types.CallbackQuery):
+    if message.from_user.username not in allowed_users:
+        return
     data = call.data.split(":")[-1]
     con = connect()
     with con.cursor() as cursor:
@@ -81,11 +90,15 @@ def bot_actions(call: types.CallbackQuery):
 
 @bot.message_handler(func=lambda message: message.text == "Главное меню")
 def main_menu(message: types.Message):
+    if message.from_user.username not in allowed_users:
+        return
     main_bar(message)
 
 
 @bot.message_handler(func=lambda message: message.text == "Получить сообщения")
 def main_menu(message: types.Message):
+    if message.from_user.username not in allowed_users:
+        return
     con = connect()
     with con.cursor() as cursor:
         cursor.execute(f"SELECT * FROM messages WHERE bot_id = '{temp_bots.get(message.chat.id, False)}'")
@@ -104,6 +117,8 @@ def main_menu(message: types.Message):
 
 @bot.message_handler(func=lambda message: message.text == "Сообщения за сегодня")
 def main_menu(message: types.Message):
+    if message.from_user.username not in allowed_users:
+        return
     date = datetime.datetime.now()
     datef = f"{date.day}.{date.month}.{date.year}"
     con = connect()
@@ -124,6 +139,8 @@ def main_menu(message: types.Message):
 
 @bot.message_handler(func=lambda message: message.text == "Статистика")
 def stats(message: types.Message):
+    if message.from_user.username not in allowed_users:
+        return
     con = connect()
     with con.cursor() as cursor:
         cursor.execute(f"SELECT * FROM messages WHERE bot_id = '{temp_bots.get(message.chat.id, False)}'")
@@ -149,6 +166,8 @@ def stats(message: types.Message):
 
 @bot.message_handler(func=lambda message: message.text == "Юзеры")
 def stats(message: types.Message):
+    if message.from_user.username not in allowed_users:
+        return
     con = connect()
     with con.cursor() as cursor:
         users = {}
