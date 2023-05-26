@@ -95,48 +95,6 @@ def main_menu(message: types.Message):
     main_bar(message)
 
 
-@bot.message_handler(func=lambda message: message.text == "Получить сообщения")
-def main_menu(message: types.Message):
-    if message.from_user.username not in allowed_users:
-        return
-    con = connect()
-    with con.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM messages WHERE bot_id = '{temp_bots.get(message.chat.id, False)}'")
-        fetch = cursor.fetchall()
-        for i in fetch:
-            cursor.execute(f"SELECT * FROM users WHERE username = '{i[2]}'")
-            if cursor.fetchall()[0][-1] != "Banned":
-                markup = types.InlineKeyboardMarkup()
-                markup.add(types.InlineKeyboardButton("Забанить", callback_data=f"messages:{i[0]}"))
-                bot.send_message(message.chat.id, f"<b>Ник отправителя</b>: @{i[2]}\n"
-                                                  f"<b>Сообщение</b>: {i[3]}\n"
-                                                  f"<b>Дата</b>: {i[4]}",
-                                 reply_markup=markup, parse_mode="HTML")
-    con.close()
-
-
-@bot.message_handler(func=lambda message: message.text == "Сообщения за сегодня")
-def main_menu(message: types.Message):
-    if message.from_user.username not in allowed_users:
-        return
-    date = datetime.datetime.now()
-    datef = f"{date.day}.{date.month}.{date.year}"
-    con = connect()
-    with con.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM messages WHERE bot_id = '{temp_bots.get(message.chat.id, False)}'"
-                       f" AND datetime = '{datef}'")
-        fetch = cursor.fetchall()
-        for i in fetch:
-            cursor.execute(f"SELECT * FROM users WHERE username = '{i[2]}'")
-            if cursor.fetchall()[0][-1] != "Banned":
-                markup = types.InlineKeyboardMarkup()
-                markup.add(types.InlineKeyboardButton("Забанить", callback_data=f"messages:{i[0]}"))
-                bot.send_message(message.chat.id, f"<b>Ник отправителя</b>: @{i[2]}\n"
-                                                  f"<b>Сообщение</b>: {i[3]}\n",
-                                 reply_markup=markup, parse_mode="HTML")
-    con.close()
-
-
 @bot.message_handler(func=lambda message: message.text == "Статистика")
 def stats(message: types.Message):
     if message.from_user.username not in allowed_users:
