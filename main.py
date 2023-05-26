@@ -40,8 +40,6 @@ def bot_actions(call: types.CallbackQuery):
     temp_bots[call.from_user.id] = data
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     items = [
-        types.KeyboardButton("Получить сообщения"),
-        types.KeyboardButton("Сообщения за сегодня"),
         types.KeyboardButton("Статистика"),
         types.KeyboardButton("Юзеры"),
         types.KeyboardButton("Главное меню")
@@ -66,7 +64,7 @@ def bot_actions(call: types.CallbackQuery):
         types.KeyboardButton("Главное меню")
     ]
     markup.add(*items, row_width=1)
-    bot.send_message(call.from_user.id, "Пользователь забанен. Теперь его сообщения не будут появляться здесь",
+    bot.send_message(call.from_user.id, "Пользователь забанен.",
                      reply_markup=markup)
 
 
@@ -84,7 +82,7 @@ def bot_actions(call: types.CallbackQuery):
         types.KeyboardButton("Главное меню")
     ]
     markup.add(*items, row_width=1)
-    bot.send_message(call.from_user.id, "Пользователь забанен. Теперь его сообщения не будут появляться здесь",
+    bot.send_message(call.from_user.id, "Пользователь забанен.",
                      reply_markup=markup)
 
 
